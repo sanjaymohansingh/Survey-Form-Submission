@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 const SurveyForm = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -11,17 +12,31 @@ const SurveyForm = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const response = await fetch("/api/survey/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    // You can perform additional validation here before submitting to the backend
-    console.log("Form submitted:", formData);
-
-    // For the complete application, send the data to your backend and store it in MongoDB
-    // Example: fetch('/submit-survey', { method: 'POST', body: JSON.stringify(formData) });
+      if (response.ok) {
+        console.log("Survey submitted successfully!");
+      } else {
+        console.error("Error submitting survey");
+      }
+    } catch (error) {
+      console.error("Error submitting survey", error);
+    }
   };
 
   return (
