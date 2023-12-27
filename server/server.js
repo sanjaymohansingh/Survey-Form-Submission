@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
 const path = require("path");
+const authRouter = require("./routes/userRoute");
 
 mongoose
   .connect(process.env.CONNECTION_STRING)
@@ -15,6 +16,7 @@ mongoose
 const app = express();
 
 app.use(express.json());
+app.use("/api/auth", authRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
